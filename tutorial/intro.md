@@ -13,7 +13,7 @@
 在开始本教程之前, 您应在开发计算机上安装[Python](https://www.python.org/) (带有[pip](https://pypi.org/project/pip/))。 如果您没有 Python, 请访问 "下载选项" 的上一个链接。
 
 > [!NOTE]
-> 本教程是使用 Python 版本3.7.0 和 Django 版本2.1 编写的。 本指南中的步骤可能适用于其他版本, 但尚未经过测试。
+> 本教程是使用 Python 版本3.7.0 和 Django 版本2.2 编写的。 本指南中的步骤可能适用于其他版本, 但尚未经过测试。
 
 ## <a name="feedback"></a>反馈
 

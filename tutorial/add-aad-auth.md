@@ -142,7 +142,7 @@ def get_user(token):
   return user.json()
 ```
 
-该`get_user`方法通过使用您之前获取的访问令牌`/me` , 向 Microsoft Graph 终结点发出 get 请求, 以获取用户的配置文件。
+该`get_user`方法通过使用您之前获取的访问令牌`/me` , 向 Microsoft GRAPH 终结点发出 get 请求, 以获取用户的配置文件。
 
 更新中`callback` `./tutorial/views.py`的方法以从 Microsoft Graph 获取用户的配置文件。
 

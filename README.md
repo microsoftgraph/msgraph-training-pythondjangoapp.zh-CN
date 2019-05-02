@@ -1,4 +1,4 @@
-# <a name="microsoft-graph-training-module---build-python-django-apps-with-microsoft-graph"></a>microsoft graph 培训模块-生成 Python Django 使用 Microsoft graph 的应用程序
+# <a name="microsoft-graph-training-module---build-python-django-apps-with-microsoft-graph"></a>Microsoft Graph 培训模块-生成 Python Django 使用 Microsoft Graph 的应用程序
 
 本模块将介绍如何通过构建 Python Django web 应用程序, 使用 Microsoft Graph 来访问 Office 365 中的数据。
 

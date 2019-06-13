@@ -29,7 +29,7 @@ def get_calendar_events(token):
 - `$select`参数将为每个事件返回的字段限制为仅显示视图实际使用的字段。
 - `$orderby`参数按其创建日期和时间对结果进行排序, 最新项目最先开始。
 
-现在, 创建一个日历视图。 首先将`from tutorial.graph_helper import get_user`行更改为以下代码行。
+现在, 创建一个日历视图。 在`./tutorial/views.py`中, 首先将`from tutorial.graph_helper import get_user`行更改为以下代码行。
 
 ```python
 from tutorial.graph_helper import get_user, get_calendar_events

@@ -3,13 +3,13 @@
 在本练习中, 将使用[Django](https://www.djangoproject.com/)生成 web 应用程序。 如果尚未安装 Django, 则可以使用以下命令从命令行界面 (CLI) 安装它。
 
 ```Shell
-pip install Django
+pip install Django=2.2.2
 ```
 
 打开您的 CLI, 导航到您有权创建文件的目录, 并运行以下命令以创建新的 Django 应用程序。
 
 ```Shell
-django-admin.py startproject graph_tutorial
+django-admin startproject graph_tutorial
 ```
 
 Django 创建一个名`graph_tutorial`为 Django web 应用程序的新目录, 并搭建基架。 导航到此新目录, 然后输入以下命令以启动本地 web 服务器。
@@ -93,9 +93,9 @@ def home(request):
 在 CLI 中运行以下命令。
 
 ```Shell
-pip install requests_oauthlib
-pip install pyyaml
-pip install python-dateutil
+pip install requests_oauthlib==1.2.0
+pip install pyyaml==5.1
+pip install python-dateutil==2.8.0
 ```
 
 ## <a name="design-the-app"></a>设计应用程序

@@ -1,32 +1,32 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-在本练习中, 将使用[Django](https://www.djangoproject.com/)生成 web 应用程序。 如果尚未安装 Django, 则可以使用以下命令从命令行界面 (CLI) 安装它。
+在本练习中，将使用[Django](https://www.djangoproject.com/)生成 web 应用程序。 如果尚未安装 Django，则可以使用以下命令从命令行界面（CLI）安装它。
 
 ```Shell
-pip install Django=2.2.2
+pip install Django=2.2.5
 ```
 
-打开您的 CLI, 导航到您有权创建文件的目录, 并运行以下命令以创建新的 Django 应用程序。
+打开您的 CLI，导航到您有权创建文件的目录，并运行以下命令以创建新的 Django 应用程序。
 
 ```Shell
 django-admin startproject graph_tutorial
 ```
 
-Django 创建一个名`graph_tutorial`为 Django web 应用程序的新目录, 并搭建基架。 导航到此新目录, 然后输入以下命令以启动本地 web 服务器。
+Django 创建一个名`graph_tutorial`为 Django web 应用程序的新目录，并搭建基架。 导航到此新目录，然后输入以下命令以启动本地 web 服务器。
 
 ```Shell
 python manage.py runserver
 ```
 
-打开浏览器，并导航到 `http://localhost:8000`。 如果一切正常, 你将看到一个 Django 欢迎页面。 如果看不到此, 请查看[Django 入门指南](https://www.djangoproject.com/start/)。
+打开浏览器，并导航到 `http://localhost:8000`。 如果一切正常，你将看到一个 Django 欢迎页面。 如果看不到此，请查看[Django 入门指南](https://www.djangoproject.com/start/)。
 
-现在您已经验证了项目, 请将应用程序添加到项目中。 在 CLI 中运行以下命令。
+现在您已经验证了项目，请将应用程序添加到项目中。 在 CLI 中运行以下命令。
 
 ```Shell
 python manage.py startapp tutorial
 ```
 
-这将`./tutorial`在目录中创建一个新的应用程序。 打开`./graph_tutorial/settings.py` , 并将新`tutorial`应用程序添加到`INSTALLED_APPS`设置。
+这将`./tutorial`在目录中创建一个新的应用程序。 打开`./graph_tutorial/settings.py` ，并将新`tutorial`应用程序添加到`INSTALLED_APPS`设置。
 
 ```python
 INSTALLED_APPS = [
@@ -40,13 +40,13 @@ INSTALLED_APPS = [
 ]
 ```
 
-在 CLI 中, 运行以下命令来初始化项目的数据库。
+在 CLI 中，运行以下命令来初始化项目的数据库。
 
 ```Shell
 python manage.py migrate
 ```
 
-为`tutorial`应用程序添加[URLconf](https://docs.djangoproject.com/en/2.1/topics/http/urls/) 。 在名为`./tutorial` `urls.py`的目录中创建一个新文件, 并添加以下代码。
+为`tutorial`应用程序添加[URLconf](https://docs.djangoproject.com/en/2.1/topics/http/urls/) 。 在名为`./tutorial` `urls.py`的目录中创建一个新文件，并添加以下代码。
 
 ```python
 from django.urls import path
@@ -59,7 +59,7 @@ urlpatterns = [
 ]
 ```
 
-现在更新项目 URLconf 以导入此项目。 打开`./graph_tutorial/urls.py`文件, 并将内容替换为以下内容。
+现在更新项目 URLconf 以导入此项目。 打开`./graph_tutorial/urls.py`文件，并将内容替换为以下内容。
 
 ```python
 from django.contrib import admin
@@ -82,11 +82,11 @@ def home(request):
   return HttpResponse("Welcome to the tutorial.")
 ```
 
-保存所有更改, 然后重新启动服务器。 浏览到`http://localhost:8000/tutorial`。 您应该会看到`Welcome to the tutorial.`
+保存所有更改，然后重新启动服务器。 浏览到`http://localhost:8000/tutorial`。 您应该会看到`Welcome to the tutorial.`
 
-在继续操作之前, 请先安装其他一些库, 稍后将使用这些库:
+在继续操作之前，请先安装其他一些库，稍后将使用这些库：
 
-- [请求-flask-oauthlib:](https://requests-oauthlib.readthedocs.io/en/latest/)用于处理登录和 OAuth 令牌流以及调用 Microsoft Graph 的 OAuth。
+- [请求-flask-oauthlib：](https://requests-oauthlib.readthedocs.io/en/latest/)用于处理登录和 OAuth 令牌流以及调用 Microsoft Graph 的 OAuth。
 - 用于从 YAML 文件加载配置的[PyYAML](https://pyyaml.org/wiki/PyYAMLDocumentation) 。
 - [python-dateutil](https://pypi.org/project/python-dateutil/)用于分析从 Microsoft Graph 返回的 ISO 8601 日期字符串。
 
@@ -100,7 +100,7 @@ pip install python-dateutil==2.8.0
 
 ## <a name="design-the-app"></a>设计应用程序
 
-首先创建模板目录, 并为应用程序定义全局布局。 在名为`./tutorial` `templates`的目录中创建一个新目录。 在`templates`目录中, 创建一个名为`tutorial`的新目录。 最后, 在此目录中创建一个名为`layout.html`的新文件。 项目的根目录的相对路径应为`./tutorial/templates/tutorial/layout.html`。 将以下代码添加到该文件中。
+首先创建模板目录，并为应用程序定义全局布局。 在名为`./tutorial` `templates`的目录中创建一个新目录。 在`templates`目录中，创建一个名为`tutorial`的新目录。 最后，在此目录中创建一个名为`layout.html`的新文件。 项目的根目录的相对路径应为`./tutorial/templates/tutorial/layout.html`。 将以下代码添加到该文件中。
 
 ```html
 <!DOCTYPE html>
@@ -188,9 +188,9 @@ pip install python-dateutil==2.8.0
 </html>
 ```
 
-此代码添加简单样式的[引导](http://getbootstrap.com/), 并添加一些简单图标的[字体](https://fontawesome.com/)。 它还定义具有导航栏的全局布局。
+此代码添加简单样式的[引导](http://getbootstrap.com/)，并添加一些简单图标的[字体](https://fontawesome.com/)。 它还定义具有导航栏的全局布局。
 
-现在, `./tutorial`在名为`static`的目录中创建一个新目录。 在`static`目录中, 创建一个名为`tutorial`的新目录。 最后, 在此目录中创建一个名为`app.css`的新文件。 项目的根目录的相对路径应为`./tutorial/static/tutorial/app.css`。 将以下代码添加到该文件中。
+现在， `./tutorial`在名为`static`的目录中创建一个新目录。 在`static`目录中，创建一个名为`tutorial`的新目录。 最后，在此目录中创建一个名为`app.css`的新文件。 项目的根目录的相对路径应为`./tutorial/static/tutorial/app.css`。 将以下代码添加到该文件中。
 
 ```css
 body {
@@ -204,7 +204,7 @@ body {
 }
 ```
 
-接下来, 为使用该布局的主页创建一个模板。 在名为`./tutorial/templates/tutorial` `home.html`的目录中创建一个新文件, 并添加以下代码。
+接下来，为使用该布局的主页创建一个模板。 在名为`./tutorial/templates/tutorial` `home.html`的目录中创建一个新文件，并添加以下代码。
 
 ```html
 {% extends "tutorial/layout.html" %}
@@ -240,7 +240,7 @@ def initialize_context(request):
   return context
 ```
 
-然后, 将现有`home`视图替换为以下项。
+然后，将现有`home`视图替换为以下项。
 
 ```python
 def home(request):
@@ -249,6 +249,6 @@ def home(request):
   return render(request, 'tutorial/home.html', context)
 ```
 
-保存所有更改, 然后重新启动服务器。 现在, 应用程序看起来应非常不同。
+保存所有更改，然后重新启动服务器。 现在，应用程序看起来应非常不同。
 
 ![重新设计的主页的屏幕截图](./images/create-app-01.png)

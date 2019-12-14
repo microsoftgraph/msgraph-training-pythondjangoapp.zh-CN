@@ -3,7 +3,7 @@
 在本练习中，将使用[Django](https://www.djangoproject.com/)生成 web 应用程序。 如果尚未安装 Django，则可以使用以下命令从命令行界面（CLI）安装它。
 
 ```Shell
-pip install Django=2.2.5
+pip install Django==3.0
 ```
 
 打开您的 CLI，导航到您有权创建文件的目录，并运行以下命令以创建新的 Django 应用程序。
@@ -75,6 +75,7 @@ urlpatterns = [
 最后将临时视图添加到`tutorials`应用程序以验证 URL 路由是否正常工作。 打开 `./tutorial/views.py` 文件并添加以下代码。
 
 ```python
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
 def home(request):
@@ -93,9 +94,9 @@ def home(request):
 在 CLI 中运行以下命令。
 
 ```Shell
-pip install requests_oauthlib==1.2.0
-pip install pyyaml==5.1
-pip install python-dateutil==2.8.0
+pip install requests_oauthlib==1.3.0
+pip install pyyaml==5.2
+pip install python-dateutil==2.8.1
 ```
 
 ## <a name="design-the-app"></a>设计应用程序

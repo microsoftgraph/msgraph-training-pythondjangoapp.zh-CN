@@ -1,35 +1,35 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-<span data-ttu-id="5bca0-101">在此练习中，你将扩展上一练习中的应用程序，以支持使用 Azure AD 进行身份验证。</span><span class="sxs-lookup"><span data-stu-id="5bca0-101">In this exercise you will extend the application from the previous exercise to support authentication with Azure AD.</span></span> <span data-ttu-id="5bca0-102">这是获取调用 Microsoft Graph 所需的 OAuth 访问令牌所必需的。</span><span class="sxs-lookup"><span data-stu-id="5bca0-102">This is required to obtain the necessary OAuth access token to call the Microsoft Graph.</span></span> <span data-ttu-id="5bca0-103">在此步骤中，你将 [MSAL for Python](https://github.com/AzureAD/microsoft-authentication-library-for-python) 库集成到应用程序中。</span><span class="sxs-lookup"><span data-stu-id="5bca0-103">In this step you will integrate the [MSAL for Python](https://github.com/AzureAD/microsoft-authentication-library-for-python) library into the application.</span></span>
+<span data-ttu-id="6a270-101">在此练习中，你将扩展上一练习中的应用程序，以支持使用 Azure AD 进行身份验证。</span><span class="sxs-lookup"><span data-stu-id="6a270-101">In this exercise you will extend the application from the previous exercise to support authentication with Azure AD.</span></span> <span data-ttu-id="6a270-102">这是获取调用 Microsoft Graph 所需的 OAuth 访问令牌所必需的。</span><span class="sxs-lookup"><span data-stu-id="6a270-102">This is required to obtain the necessary OAuth access token to call the Microsoft Graph.</span></span> <span data-ttu-id="6a270-103">在此步骤中，你将 [MSAL for Python](https://github.com/AzureAD/microsoft-authentication-library-for-python) 库集成到应用程序中。</span><span class="sxs-lookup"><span data-stu-id="6a270-103">In this step you will integrate the [MSAL for Python](https://github.com/AzureAD/microsoft-authentication-library-for-python) library into the application.</span></span>
 
-1. <span data-ttu-id="5bca0-104">在名为项目根目录的项目中创建新文件 `oauth_settings.yml` ，并添加以下内容。</span><span class="sxs-lookup"><span data-stu-id="5bca0-104">Create a new file in the root of the project named `oauth_settings.yml`, and add the following content.</span></span>
+1. <span data-ttu-id="6a270-104">在名为项目根目录的项目中创建新文件 `oauth_settings.yml` ，并添加以下内容。</span><span class="sxs-lookup"><span data-stu-id="6a270-104">Create a new file in the root of the project named `oauth_settings.yml`, and add the following content.</span></span>
 
     :::code language="ini" source="../demo/graph_tutorial/oauth_settings.yml.example":::
 
-1. <span data-ttu-id="5bca0-105">替换为 `YOUR_APP_ID_HERE` 应用程序注册门户中的应用程序 ID，并 `YOUR_APP_SECRET_HERE` 替换为生成的密码。</span><span class="sxs-lookup"><span data-stu-id="5bca0-105">Replace `YOUR_APP_ID_HERE` with the application ID from the Application Registration Portal, and replace `YOUR_APP_SECRET_HERE` with the password you generated.</span></span>
+1. <span data-ttu-id="6a270-105">替换为 `YOUR_APP_ID_HERE` 应用程序注册门户中的应用程序 ID，并 `YOUR_APP_SECRET_HERE` 替换为生成的密码。</span><span class="sxs-lookup"><span data-stu-id="6a270-105">Replace `YOUR_APP_ID_HERE` with the application ID from the Application Registration Portal, and replace `YOUR_APP_SECRET_HERE` with the password you generated.</span></span>
 
 > [!IMPORTANT]
-> <span data-ttu-id="5bca0-106">如果你使用的是源代码管理（如 git），那么现在应该从源代码管理中排除 **oauth_settings.yml** 文件，以避免意外泄露应用 ID 和密码。</span><span class="sxs-lookup"><span data-stu-id="5bca0-106">If you're using source control such as git, now would be a good time to exclude the **oauth_settings.yml** file from source control to avoid inadvertently leaking your app ID and password.</span></span>
+> <span data-ttu-id="6a270-106">如果你使用的是源代码管理（如 git），那么现在应该从源代码管理中排除 **oauth_settings.yml** 文件，以避免意外泄露应用 ID 和密码。</span><span class="sxs-lookup"><span data-stu-id="6a270-106">If you're using source control such as git, now would be a good time to exclude the **oauth_settings.yml** file from source control to avoid inadvertently leaking your app ID and password.</span></span>
 
-## <a name="implement-sign-in"></a><span data-ttu-id="5bca0-107">实现登录</span><span class="sxs-lookup"><span data-stu-id="5bca0-107">Implement sign-in</span></span>
+## <a name="implement-sign-in"></a><span data-ttu-id="6a270-107">实现登录</span><span class="sxs-lookup"><span data-stu-id="6a270-107">Implement sign-in</span></span>
 
-1. <span data-ttu-id="5bca0-108">在 **./tutorial** 目录中创建一个名为的新文件， `auth_helper.py` 并添加以下代码。</span><span class="sxs-lookup"><span data-stu-id="5bca0-108">Create a new file in the **./tutorial** directory named `auth_helper.py` and add the following code.</span></span>
+1. <span data-ttu-id="6a270-108">在 **./tutorial** 目录中创建一个名为的新文件， `auth_helper.py` 并添加以下代码。</span><span class="sxs-lookup"><span data-stu-id="6a270-108">Create a new file in the **./tutorial** directory named `auth_helper.py` and add the following code.</span></span>
 
     :::code language="python" source="../demo/graph_tutorial/tutorial/auth_helper.py" id="FirstCodeSnippet":::
 
-    <span data-ttu-id="5bca0-109">此文件将保存所有与身份验证相关的方法。</span><span class="sxs-lookup"><span data-stu-id="5bca0-109">This file will hold all of your authentication-related methods.</span></span> <span data-ttu-id="5bca0-110">该方法 `get_sign_in_flow` 将生成授权 URL，并 `get_token_from_code` 交换访问令牌的授权响应。</span><span class="sxs-lookup"><span data-stu-id="5bca0-110">The `get_sign_in_flow` generates an authorization URL, and the `get_token_from_code` method exchanges the authorization response for an access token.</span></span>
+    <span data-ttu-id="6a270-109">此文件将保存所有与身份验证相关的方法。</span><span class="sxs-lookup"><span data-stu-id="6a270-109">This file will hold all of your authentication-related methods.</span></span> <span data-ttu-id="6a270-110">该方法 `get_sign_in_flow` 将生成授权 URL，并 `get_token_from_code` 交换访问令牌的授权响应。</span><span class="sxs-lookup"><span data-stu-id="6a270-110">The `get_sign_in_flow` generates an authorization URL, and the `get_token_from_code` method exchanges the authorization response for an access token.</span></span>
 
-1. <span data-ttu-id="5bca0-111">将以下 `import` 语句添加到 **./tutorial/views.py 的顶部**。</span><span class="sxs-lookup"><span data-stu-id="5bca0-111">Add the following `import` statement to the top of **./tutorial/views.py**.</span></span>
+1. <span data-ttu-id="6a270-111">将以下 `import` 语句添加到 **./tutorial/views.py 的顶部**。</span><span class="sxs-lookup"><span data-stu-id="6a270-111">Add the following `import` statement to the top of **./tutorial/views.py**.</span></span>
 
     ```python
     from tutorial.auth_helper import get_sign_in_flow, get_token_from_code
     ```
 
-1. <span data-ttu-id="5bca0-112">在 **./tutorial/views.py** 文件中添加登录视图。</span><span class="sxs-lookup"><span data-stu-id="5bca0-112">Add a sign-in view in the **./tutorial/views.py** file.</span></span>
+1. <span data-ttu-id="6a270-112">在 **./tutorial/views.py** 文件中添加登录视图。</span><span class="sxs-lookup"><span data-stu-id="6a270-112">Add a sign-in view in the **./tutorial/views.py** file.</span></span>
 
     :::code language="python" source="../demo/graph_tutorial/tutorial/views.py" id="SignInViewSnippet":::
 
-1. <span data-ttu-id="5bca0-113">在 **./tutorial/views.py** 文件中添加回调视图。</span><span class="sxs-lookup"><span data-stu-id="5bca0-113">Add a callback view in the **./tutorial/views.py** file.</span></span>
+1. <span data-ttu-id="6a270-113">在 **./tutorial/views.py** 文件中添加回调视图。</span><span class="sxs-lookup"><span data-stu-id="6a270-113">Add a callback view in the **./tutorial/views.py** file.</span></span>
 
     ```python
     def callback(request):
@@ -40,41 +40,41 @@
       return HttpResponseRedirect(reverse('home'))
     ```
 
-    <span data-ttu-id="5bca0-114">请考虑这些视图执行哪些功能：</span><span class="sxs-lookup"><span data-stu-id="5bca0-114">Consider what these views do:</span></span>
+    <span data-ttu-id="6a270-114">请考虑这些视图执行哪些功能：</span><span class="sxs-lookup"><span data-stu-id="6a270-114">Consider what these views do:</span></span>
 
-    - <span data-ttu-id="5bca0-115">该操作将生成 Azure AD 登录 URL，保存 OAuth 客户端生成的流，然后将浏览器重定向到 `signin` Azure AD 登录页。</span><span class="sxs-lookup"><span data-stu-id="5bca0-115">The `signin` action generates the Azure AD signin URL, saves the flow generated by the OAuth client, then redirects the browser to the Azure AD signin page.</span></span>
+    - <span data-ttu-id="6a270-115">该操作将生成 Azure AD 登录 URL，保存 OAuth 客户端生成的流，然后将浏览器重定向到 `signin` Azure AD 登录页。</span><span class="sxs-lookup"><span data-stu-id="6a270-115">The `signin` action generates the Azure AD signin URL, saves the flow generated by the OAuth client, then redirects the browser to the Azure AD signin page.</span></span>
 
-    - <span data-ttu-id="5bca0-116">此操作 `callback` 是 Azure 在登录完成后重定向的地方。</span><span class="sxs-lookup"><span data-stu-id="5bca0-116">The `callback` action is where Azure redirects after the signin is complete.</span></span> <span data-ttu-id="5bca0-117">该操作使用已保存的流和 Azure 发送的查询字符串请求访问令牌。</span><span class="sxs-lookup"><span data-stu-id="5bca0-117">That action uses the saved flow and the query string sent by Azure to request an access token.</span></span> <span data-ttu-id="5bca0-118">然后，它将重定向回主页，并返回临时错误值中的响应。</span><span class="sxs-lookup"><span data-stu-id="5bca0-118">It then redirects back to the home page with the response in the temporary error value.</span></span> <span data-ttu-id="5bca0-119">在继续之前，你将使用此验证登录是否正常工作。</span><span class="sxs-lookup"><span data-stu-id="5bca0-119">You'll use this to verify that our sign-in is working before moving on.</span></span>
+    - <span data-ttu-id="6a270-116">此操作 `callback` 是 Azure 在登录完成后重定向的地方。</span><span class="sxs-lookup"><span data-stu-id="6a270-116">The `callback` action is where Azure redirects after the signin is complete.</span></span> <span data-ttu-id="6a270-117">该操作使用已保存的流和 Azure 发送的查询字符串请求访问令牌。</span><span class="sxs-lookup"><span data-stu-id="6a270-117">That action uses the saved flow and the query string sent by Azure to request an access token.</span></span> <span data-ttu-id="6a270-118">然后，它将重定向回主页，并返回临时错误值中的响应。</span><span class="sxs-lookup"><span data-stu-id="6a270-118">It then redirects back to the home page with the response in the temporary error value.</span></span> <span data-ttu-id="6a270-119">在继续之前，你将使用此验证登录是否正常工作。</span><span class="sxs-lookup"><span data-stu-id="6a270-119">You'll use this to verify that our sign-in is working before moving on.</span></span>
 
-1. <span data-ttu-id="5bca0-120">打开 **./tutorial/urls.py，** 将现有 `path` 语句 `signin` 替换为以下内容。</span><span class="sxs-lookup"><span data-stu-id="5bca0-120">Open **./tutorial/urls.py** and replace the existing `path` statements for `signin` with the following.</span></span>
+1. <span data-ttu-id="6a270-120">打开 **./tutorial/urls.py，** 将现有 `path` 语句 `signin` 替换为以下内容。</span><span class="sxs-lookup"><span data-stu-id="6a270-120">Open **./tutorial/urls.py** and replace the existing `path` statements for `signin` with the following.</span></span>
 
     ```python
     path('signin', views.sign_in, name='signin'),
     ```
 
-1. <span data-ttu-id="5bca0-121">为视图 `path` 添加新 `callback` 视图。</span><span class="sxs-lookup"><span data-stu-id="5bca0-121">Add a new `path` for the `callback` view.</span></span>
+1. <span data-ttu-id="6a270-121">为视图 `path` 添加新 `callback` 视图。</span><span class="sxs-lookup"><span data-stu-id="6a270-121">Add a new `path` for the `callback` view.</span></span>
 
     ```python
     path('callback', views.callback, name='callback'),
     ```
 
-1. <span data-ttu-id="5bca0-122">启动服务器并浏览到 `https://localhost:8000` 。</span><span class="sxs-lookup"><span data-stu-id="5bca0-122">Start the server and browse to `https://localhost:8000`.</span></span> <span data-ttu-id="5bca0-123">单击登录按钮，应重定向到 `https://login.microsoftonline.com` 。</span><span class="sxs-lookup"><span data-stu-id="5bca0-123">Click the sign-in button and you should be redirected to `https://login.microsoftonline.com`.</span></span> <span data-ttu-id="5bca0-124">使用 Microsoft 帐户登录，并同意请求的权限。</span><span class="sxs-lookup"><span data-stu-id="5bca0-124">Login with your Microsoft account and consent to the requested permissions.</span></span> <span data-ttu-id="5bca0-125">浏览器重定向到应用，显示响应，包括访问令牌。</span><span class="sxs-lookup"><span data-stu-id="5bca0-125">The browser redirects to the app, showing the response, including the access token.</span></span>
+1. <span data-ttu-id="6a270-122">启动服务器并浏览到 `https://localhost:8000` 。</span><span class="sxs-lookup"><span data-stu-id="6a270-122">Start the server and browse to `https://localhost:8000`.</span></span> <span data-ttu-id="6a270-123">单击登录按钮，应重定向到 `https://login.microsoftonline.com` 。</span><span class="sxs-lookup"><span data-stu-id="6a270-123">Click the sign-in button and you should be redirected to `https://login.microsoftonline.com`.</span></span> <span data-ttu-id="6a270-124">使用 Microsoft 帐户登录，并同意请求的权限。</span><span class="sxs-lookup"><span data-stu-id="6a270-124">Login with your Microsoft account and consent to the requested permissions.</span></span> <span data-ttu-id="6a270-125">浏览器重定向到应用，显示响应，包括访问令牌。</span><span class="sxs-lookup"><span data-stu-id="6a270-125">The browser redirects to the app, showing the response, including the access token.</span></span>
 
-### <a name="get-user-details"></a><span data-ttu-id="5bca0-126">获取用户详细信息</span><span class="sxs-lookup"><span data-stu-id="5bca0-126">Get user details</span></span>
+### <a name="get-user-details"></a><span data-ttu-id="6a270-126">获取用户详细信息</span><span class="sxs-lookup"><span data-stu-id="6a270-126">Get user details</span></span>
 
-1. <span data-ttu-id="5bca0-127">在 **./tutorial** 目录中创建一个名为的新文件， `graph_helper.py` 并添加以下代码。</span><span class="sxs-lookup"><span data-stu-id="5bca0-127">Create a new file in the **./tutorial** directory named `graph_helper.py` and add the following code.</span></span>
+1. <span data-ttu-id="6a270-127">在 **./tutorial** 目录中创建一个名为的新文件， `graph_helper.py` 并添加以下代码。</span><span class="sxs-lookup"><span data-stu-id="6a270-127">Create a new file in the **./tutorial** directory named `graph_helper.py` and add the following code.</span></span>
 
     :::code language="python" source="../demo/graph_tutorial/tutorial/graph_helper.py" id="FirstCodeSnippet":::
 
-    <span data-ttu-id="5bca0-128">此方法使用你之前获取的访问令牌向 Microsoft Graph 终结点发送 GET 请求，获取 `get_user` `/me` 用户配置文件。</span><span class="sxs-lookup"><span data-stu-id="5bca0-128">The `get_user` method makes a GET request to the Microsoft Graph `/me` endpoint to get the user's profile, using the access token you acquired previously.</span></span>
+    <span data-ttu-id="6a270-128">此方法使用你之前获取的访问令牌向 Microsoft Graph 终结点发送 GET 请求，获取 `get_user` `/me` 用户配置文件。</span><span class="sxs-lookup"><span data-stu-id="6a270-128">The `get_user` method makes a GET request to the Microsoft Graph `/me` endpoint to get the user's profile, using the access token you acquired previously.</span></span>
 
-1. <span data-ttu-id="5bca0-129">更新 `callback` **./tutorial/views.py** 中的方法，从 Microsoft Graph 获取用户配置文件。</span><span class="sxs-lookup"><span data-stu-id="5bca0-129">Update the `callback` method in **./tutorial/views.py** to get the user's profile from Microsoft Graph.</span></span> <span data-ttu-id="5bca0-130">将以下 `import` 语句添加到文件顶部。</span><span class="sxs-lookup"><span data-stu-id="5bca0-130">Add the following `import` statement to the top of the file.</span></span>
+1. <span data-ttu-id="6a270-129">更新 `callback` **./tutorial/views.py** 中的方法，从 Microsoft Graph 获取用户配置文件。</span><span class="sxs-lookup"><span data-stu-id="6a270-129">Update the `callback` method in **./tutorial/views.py** to get the user's profile from Microsoft Graph.</span></span> <span data-ttu-id="6a270-130">将以下 `import` 语句添加到文件顶部。</span><span class="sxs-lookup"><span data-stu-id="6a270-130">Add the following `import` statement to the top of the file.</span></span>
 
     ```python
     from tutorial.graph_helper import *
     ```
 
-1. <span data-ttu-id="5bca0-131">将 `callback` 该方法替换为以下代码。</span><span class="sxs-lookup"><span data-stu-id="5bca0-131">Replace the `callback` method with the following code.</span></span>
+1. <span data-ttu-id="6a270-131">将 `callback` 该方法替换为以下代码。</span><span class="sxs-lookup"><span data-stu-id="6a270-131">Replace the `callback` method with the following code.</span></span>
 
     ```python
     def callback(request):
@@ -88,46 +88,46 @@
       return HttpResponseRedirect(reverse('home'))
     ```
 
-    <span data-ttu-id="5bca0-132">新代码调用 `get_user` 此方法以请求用户配置文件。</span><span class="sxs-lookup"><span data-stu-id="5bca0-132">The new code calls the `get_user` method to request the user's profile.</span></span> <span data-ttu-id="5bca0-133">它将用户对象添加到临时输出中进行测试。</span><span class="sxs-lookup"><span data-stu-id="5bca0-133">It adds the user object to the temporary output for testing.</span></span>
+    <span data-ttu-id="6a270-132">新代码调用 `get_user` 此方法以请求用户配置文件。</span><span class="sxs-lookup"><span data-stu-id="6a270-132">The new code calls the `get_user` method to request the user's profile.</span></span> <span data-ttu-id="6a270-133">它将用户对象添加到临时输出中进行测试。</span><span class="sxs-lookup"><span data-stu-id="6a270-133">It adds the user object to the temporary output for testing.</span></span>
 
-1. <span data-ttu-id="5bca0-134">将以下新方法添加到 **./tutorial/auth_helper.py**。</span><span class="sxs-lookup"><span data-stu-id="5bca0-134">Add the following new methods to **./tutorial/auth_helper.py**.</span></span>
+1. <span data-ttu-id="6a270-134">将以下新方法添加到 **./tutorial/auth_helper.py**。</span><span class="sxs-lookup"><span data-stu-id="6a270-134">Add the following new methods to **./tutorial/auth_helper.py**.</span></span>
 
     :::code language="python" source="../demo/graph_tutorial/tutorial/auth_helper.py" id="SecondCodeSnippet":::
 
-1. <span data-ttu-id="5bca0-135">更新 `callback` **./tutorial/views.py** 中的函数以在会话中存储用户并重定向回主页。</span><span class="sxs-lookup"><span data-stu-id="5bca0-135">Update the `callback` function in **./tutorial/views.py** to store the user in the session and redirect back to the main page.</span></span> <span data-ttu-id="5bca0-136">将 `from tutorial.auth_helper import get_sign_in_url, get_token_from_code` 该行替换为以下内容。</span><span class="sxs-lookup"><span data-stu-id="5bca0-136">Replace the `from tutorial.auth_helper import get_sign_in_url, get_token_from_code` line with the following.</span></span>
+1. <span data-ttu-id="6a270-135">更新 `callback` **./tutorial/views.py** 中的函数以在会话中存储用户并重定向回主页。</span><span class="sxs-lookup"><span data-stu-id="6a270-135">Update the `callback` function in **./tutorial/views.py** to store the user in the session and redirect back to the main page.</span></span> <span data-ttu-id="6a270-136">将 `from tutorial.auth_helper import get_sign_in_flow, get_token_from_code` 该行替换为以下内容。</span><span class="sxs-lookup"><span data-stu-id="6a270-136">Replace the `from tutorial.auth_helper import get_sign_in_flow, get_token_from_code` line with the following.</span></span>
 
     ```python
-    from tutorial.auth_helper import get_sign_in_url, get_token_from_code, store_user, remove_user_and_token, get_token
+    from tutorial.auth_helper import get_sign_in_flow, get_token_from_code, store_user, remove_user_and_token, get_token
     ```
 
-1. <span data-ttu-id="5bca0-137">将 `callback` 该方法替换为以下内容。</span><span class="sxs-lookup"><span data-stu-id="5bca0-137">Replace the `callback` method with the following.</span></span>
+1. <span data-ttu-id="6a270-137">将 `callback` 该方法替换为以下内容。</span><span class="sxs-lookup"><span data-stu-id="6a270-137">Replace the `callback` method with the following.</span></span>
 
     :::code language="python" source="../demo/graph_tutorial/tutorial/views.py" id="CallbackViewSnippet":::
 
-## <a name="implement-sign-out"></a><span data-ttu-id="5bca0-138">实现注销</span><span class="sxs-lookup"><span data-stu-id="5bca0-138">Implement sign-out</span></span>
+## <a name="implement-sign-out"></a><span data-ttu-id="6a270-138">实现注销</span><span class="sxs-lookup"><span data-stu-id="6a270-138">Implement sign-out</span></span>
 
-1. <span data-ttu-id="5bca0-139">在 `sign_out` **./tutorial/views.py 中添加新视图**。</span><span class="sxs-lookup"><span data-stu-id="5bca0-139">Add a new `sign_out` view in **./tutorial/views.py**.</span></span>
+1. <span data-ttu-id="6a270-139">在 `sign_out` **./tutorial/views.py 中添加新视图**。</span><span class="sxs-lookup"><span data-stu-id="6a270-139">Add a new `sign_out` view in **./tutorial/views.py**.</span></span>
 
     :::code language="python" source="../demo/graph_tutorial/tutorial/views.py" id="SignOutViewSnippet":::
 
-1. <span data-ttu-id="5bca0-140">打开 **./tutorial/urls.py，** 将现有 `path` 语句 `signout` 替换为以下内容。</span><span class="sxs-lookup"><span data-stu-id="5bca0-140">Open **./tutorial/urls.py** and replace the existing `path` statements for `signout` with the following.</span></span>
+1. <span data-ttu-id="6a270-140">打开 **./tutorial/urls.py，** 将现有 `path` 语句 `signout` 替换为以下内容。</span><span class="sxs-lookup"><span data-stu-id="6a270-140">Open **./tutorial/urls.py** and replace the existing `path` statements for `signout` with the following.</span></span>
 
     ```python
     path('signout', views.sign_out, name='signout'),
     ```
 
-1. <span data-ttu-id="5bca0-141">重新启动服务器并完成登录过程。</span><span class="sxs-lookup"><span data-stu-id="5bca0-141">Restart the server and go through the sign-in process.</span></span> <span data-ttu-id="5bca0-142">你最终应返回到主页，但 UI 应更改以指示你已登录。</span><span class="sxs-lookup"><span data-stu-id="5bca0-142">You should end up back on the home page, but the UI should change to indicate that you are signed-in.</span></span>
+1. <span data-ttu-id="6a270-141">重新启动服务器并完成登录过程。</span><span class="sxs-lookup"><span data-stu-id="6a270-141">Restart the server and go through the sign-in process.</span></span> <span data-ttu-id="6a270-142">你最终应返回主页，但 UI 应更改以指示你已登录。</span><span class="sxs-lookup"><span data-stu-id="6a270-142">You should end up back on the home page, but the UI should change to indicate that you are signed-in.</span></span>
 
     ![登录后主页的屏幕截图](./images/add-aad-auth-01.png)
 
-1. <span data-ttu-id="5bca0-144">单击右上角的用户头像以访问 **"注销"** 链接。</span><span class="sxs-lookup"><span data-stu-id="5bca0-144">Click the user avatar in the top right corner to access the **Sign Out** link.</span></span> <span data-ttu-id="5bca0-145">单击 **"注销** "可重置会话，并返回到主页。</span><span class="sxs-lookup"><span data-stu-id="5bca0-145">Clicking **Sign Out** resets the session and returns you to the home page.</span></span>
+1. <span data-ttu-id="6a270-144">单击右上角的用户头像以访问 **"注销"** 链接。</span><span class="sxs-lookup"><span data-stu-id="6a270-144">Click the user avatar in the top right corner to access the **Sign Out** link.</span></span> <span data-ttu-id="6a270-145">单击 **"注销** "可重置会话，并返回到主页。</span><span class="sxs-lookup"><span data-stu-id="6a270-145">Clicking **Sign Out** resets the session and returns you to the home page.</span></span>
 
     ![包含"注销"链接的下拉菜单屏幕截图](./images/add-aad-auth-02.png)
 
-## <a name="refreshing-tokens"></a><span data-ttu-id="5bca0-147">刷新令牌</span><span class="sxs-lookup"><span data-stu-id="5bca0-147">Refreshing tokens</span></span>
+## <a name="refreshing-tokens"></a><span data-ttu-id="6a270-147">刷新令牌</span><span class="sxs-lookup"><span data-stu-id="6a270-147">Refreshing tokens</span></span>
 
-<span data-ttu-id="5bca0-148">此时，应用程序具有访问令牌，该令牌在 API 调用 `Authorization` 标头中发送。</span><span class="sxs-lookup"><span data-stu-id="5bca0-148">At this point your application has an access token, which is sent in the `Authorization` header of API calls.</span></span> <span data-ttu-id="5bca0-149">这是允许应用代表用户访问 Microsoft Graph 的令牌。</span><span class="sxs-lookup"><span data-stu-id="5bca0-149">This is the token that allows the app to access the Microsoft Graph on the user's behalf.</span></span>
+<span data-ttu-id="6a270-148">此时，应用程序具有访问令牌，该令牌在 API 调用 `Authorization` 标头中发送。</span><span class="sxs-lookup"><span data-stu-id="6a270-148">At this point your application has an access token, which is sent in the `Authorization` header of API calls.</span></span> <span data-ttu-id="6a270-149">这是允许应用代表用户访问 Microsoft Graph 的令牌。</span><span class="sxs-lookup"><span data-stu-id="6a270-149">This is the token that allows the app to access the Microsoft Graph on the user's behalf.</span></span>
 
-<span data-ttu-id="5bca0-150">但是，此令牌是短期的。</span><span class="sxs-lookup"><span data-stu-id="5bca0-150">However, this token is short-lived.</span></span> <span data-ttu-id="5bca0-151">令牌在颁发后一小时过期。</span><span class="sxs-lookup"><span data-stu-id="5bca0-151">The token expires an hour after it is issued.</span></span> <span data-ttu-id="5bca0-152">刷新令牌在这里变得有用。</span><span class="sxs-lookup"><span data-stu-id="5bca0-152">This is where the refresh token becomes useful.</span></span> <span data-ttu-id="5bca0-153">刷新令牌允许应用请求新的访问令牌，而无需用户重新登录。</span><span class="sxs-lookup"><span data-stu-id="5bca0-153">The refresh token allows the app to request a new access token without requiring the user to sign in again.</span></span>
+<span data-ttu-id="6a270-150">但是，此令牌是短期的。</span><span class="sxs-lookup"><span data-stu-id="6a270-150">However, this token is short-lived.</span></span> <span data-ttu-id="6a270-151">令牌在颁发后一小时过期。</span><span class="sxs-lookup"><span data-stu-id="6a270-151">The token expires an hour after it is issued.</span></span> <span data-ttu-id="6a270-152">刷新令牌在这里变得有用。</span><span class="sxs-lookup"><span data-stu-id="6a270-152">This is where the refresh token becomes useful.</span></span> <span data-ttu-id="6a270-153">刷新令牌允许应用请求新的访问令牌，而无需用户重新登录。</span><span class="sxs-lookup"><span data-stu-id="6a270-153">The refresh token allows the app to request a new access token without requiring the user to sign in again.</span></span>
 
-<span data-ttu-id="5bca0-154">由于此示例使用 MSAL，因此不需要编写任何特定代码来刷新令牌。</span><span class="sxs-lookup"><span data-stu-id="5bca0-154">Because this sample uses MSAL, you do not have to write any specific code to refresh the token.</span></span> <span data-ttu-id="5bca0-155">MSAL `acquire_token_silent` 的方法可处理刷新令牌（如果需要）。</span><span class="sxs-lookup"><span data-stu-id="5bca0-155">MSAL's `acquire_token_silent` method handles refreshing the token if needed.</span></span>
+<span data-ttu-id="6a270-154">由于此示例使用 MSAL，因此不需要编写任何特定代码来刷新令牌。</span><span class="sxs-lookup"><span data-stu-id="6a270-154">Because this sample uses MSAL, you do not have to write any specific code to refresh the token.</span></span> <span data-ttu-id="6a270-155">MSAL `acquire_token_silent` 的方法可处理刷新令牌（如果需要）。</span><span class="sxs-lookup"><span data-stu-id="6a270-155">MSAL's `acquire_token_silent` method handles refreshing the token if needed.</span></span>

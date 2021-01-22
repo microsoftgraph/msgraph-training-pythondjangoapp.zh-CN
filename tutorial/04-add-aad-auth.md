@@ -94,10 +94,10 @@
 
     :::code language="python" source="../demo/graph_tutorial/tutorial/auth_helper.py" id="SecondCodeSnippet":::
 
-1. 更新 `callback` **./tutorial/views.py** 中的函数以在会话中存储用户并重定向回主页。 将 `from tutorial.auth_helper import get_sign_in_url, get_token_from_code` 该行替换为以下内容。
+1. 更新 `callback` **./tutorial/views.py** 中的函数以在会话中存储用户并重定向回主页。 将 `from tutorial.auth_helper import get_sign_in_flow, get_token_from_code` 该行替换为以下内容。
 
     ```python
-    from tutorial.auth_helper import get_sign_in_url, get_token_from_code, store_user, remove_user_and_token, get_token
+    from tutorial.auth_helper import get_sign_in_flow, get_token_from_code, store_user, remove_user_and_token, get_token
     ```
 
 1. 将 `callback` 该方法替换为以下内容。
@@ -116,7 +116,7 @@
     path('signout', views.sign_out, name='signout'),
     ```
 
-1. 重新启动服务器并完成登录过程。 你最终应返回到主页，但 UI 应更改以指示你已登录。
+1. 重新启动服务器并完成登录过程。 你最终应返回主页，但 UI 应更改以指示你已登录。
 
     ![登录后主页的屏幕截图](./images/add-aad-auth-01.png)
 
